@@ -22,7 +22,7 @@ namespace fgcu {
     const unsigned int FGCU_GOLD_LT  = 0xE7BC71FF;
 
     const int FPS = 30;     // how many update frames per second
-    const int FRAME_RATE_MS = (1.f / float(FPS) * 1000.f); // per millisecond
+    const int FRAME_RATE_MS = (1.f / float(FPS)); // per millisecond
 
     const int WindowWidth = 750;
     const int WindowHeight = 750;
@@ -80,6 +80,7 @@ namespace fgcu {
             int source;
             int target;
             float speed;
+            float rotated;
         };
 
         AzulState _azulState;
@@ -117,15 +118,15 @@ namespace fgcu {
 
         bool processEvents(AzulUtility::KeyPressedState input[]);
 
-        bool update(int lag);
+        bool update(float lag);
 
-        void render(int lag);
+        void render(float lag);
 
-        bool moveAzul(int lag);
+        bool moveAzul(float lag);
 
-        bool azulCollision(int lag);
+        bool azulCollision(float lag);
 
-        bool rotateAzul(int lag);
+        bool rotateAzul(float lag);
 
     public:
 

@@ -3,7 +3,6 @@
 //
 
 #include "headers/AzulBoard.h"
-#include "headers/AzulFileHandler.h"
 
 namespace fgcu {
 
@@ -107,19 +106,16 @@ namespace fgcu {
         bool running = true;
 
         sf::Clock frameTimer;   // frame rate timer
-        int lag{0};             // cumulative lag time each frame
+        float lag{0};             // cumulative lag time each frame
 
         bool done = false;
         while (!done && running) {
-            lag += frameTimer.restart().asMilliseconds();
+            lag = frameTimer.restart().asSeconds();
 
             running = processEvents(_keyStates);
 
             if (running) {
-                while (lag >= FRAME_RATE_MS) {
-                    done = update(lag);
-                    lag %= FRAME_RATE_MS;
-                }
+                done = update(lag);
             }
 
             if (running) {
@@ -154,8 +150,8 @@ namespace fgcu {
             }
 
             // speed is distance converted to milliseconds
-            _azulMove.speed.x = (_azulMove.target.x - _azulMove.source.x) / 1000.f;
-            _azulMove.speed.y = (_azulMove.target.y - _azulMove.source.y) / 1000.f;
+            _azulMove.speed.x = (_azulMove.target.x - _azulMove.source.x);
+            _azulMove.speed.y = (_azulMove.target.y - _azulMove.source.y);
 
             _azulMove.animation.image = 0;
             _azulMove.animation.frame = 0;
@@ -224,7 +220,9 @@ namespace fgcu {
             // rotate left 90 degrees {modulus = (((a % b) + b) % b)}
             _azulRotate.target = (((_azulRotate.source - 90) % 360) + 360) % 360;
             // calc degrees per millisecond (negative to rotate counter clockwise)
-            _azulRotate.speed = -90.f / 1000.f;
+            _azulRotate.speed = -90.f;
+            // degrees rotated
+            _azulRotate.rotated = 0.f;
             // set state to rotating
             _azulState = AzulState::Rotating;
             // rotate Azul

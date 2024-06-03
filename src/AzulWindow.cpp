@@ -6,13 +6,17 @@
 #include "headers/AzulSprites.h"
 #include "headers/RobotoMonoFont.h"
 #include <algorithm> // swap
-#include <cmath> // round
+#include <cmath> // round, fmod
+
+#include <iostream>
 
 namespace fgcu {
 
     AzulWindow::AzulWindow(int rows, int columns, const std::string& title) :
             _dimensions{rows, columns}, _title{title}, _cellSize{0.f},
             _window(sf::VideoMode(WindowWidth, WindowHeight), title) {
+
+        _window.setFramerateLimit(FPS);
 
         _backgroundColor = AzulUtility::lighten(fgcu::BackgroundColor, 0.75);
     } // constructor
@@ -154,7 +158,7 @@ namespace fgcu {
         return open;
     }
 
-    bool AzulWindow::update(int lag) {
+    bool AzulWindow::update(float lag) {
         bool done = true;
 
         switch (_azulState) {
@@ -194,7 +198,7 @@ namespace fgcu {
         return done;
     } // update
 
-    void AzulWindow::render(int lag) {
+    void AzulWindow::render(float lag) {
         _window.clear(_backgroundColor);
 
         for (int row=0; row < _dimensions.y; ++row) {
@@ -206,8 +210,8 @@ namespace fgcu {
         sf::Sprite tempAzul = _azulShape;
         sf::Vector2f currentPosition = tempAzul.getPosition();
         float speedAdjust = _azulSpeed.getValue() * 0.25f;
-        currentPosition.x += _azulMove.speed.x * speedAdjust * float(lag);
-        currentPosition.y += _azulMove.speed.y * speedAdjust * float(lag);
+        currentPosition.x += _azulMove.speed.x * speedAdjust * lag;
+        currentPosition.y += _azulMove.speed.y * speedAdjust * lag;
         tempAzul.setPosition(currentPosition);
         _window.draw(tempAzul);
 
@@ -219,13 +223,13 @@ namespace fgcu {
         _window.display();
     } // render
 
-    bool AzulWindow::moveAzul(int lag) {
+    bool AzulWindow::moveAzul(float lag) {
         bool moving = true;
 
         float speedAdjust = _azulSpeed.getValue() * 0.25f;
         sf::Vector2f currentPosition = _azulShape.getPosition();
-        currentPosition.x += _azulMove.speed.x * speedAdjust * float(lag);
-        currentPosition.y += _azulMove.speed.y * speedAdjust * float(lag);
+        currentPosition.x += _azulMove.speed.x * speedAdjust * lag;
+        currentPosition.y += _azulMove.speed.y * speedAdjust * lag;
 
         bool atTarget = false;
 
@@ -270,13 +274,13 @@ namespace fgcu {
         return moving;
     } // moveAzul
 
-    bool AzulWindow::azulCollision(int lag) {
+    bool AzulWindow::azulCollision(float lag) {
         bool colliding = true;
 
         if (_azulMove.animation.frame == 0) {
             if (!moveAzul(lag)) {
                 std::swap(_azulMove.source, _azulMove.target);
-                if (std::abs(_azulMove.speed.x) > 0.0000001f)
+                if (std::abs(_azulMove.speed.x) > 0.0f)
                     _azulMove.speed.x *= -1;
                 else
                     _azulMove.speed.y *= -1;
@@ -295,31 +299,24 @@ namespace fgcu {
         }
 
         return colliding;
-    }
+    } // azulCollision
 
-    bool AzulWindow::rotateAzul(int lag) {
+    bool AzulWindow::rotateAzul(float lag) {
         bool rotating = true;
 
         float speedAdjust = _azulSpeed.getValue() * 0.25f;
 
-        int currentRotation = _azulShape.getRotation();
-        currentRotation += _azulRotate.speed * speedAdjust * float(lag);
+        float currentRotation = _azulShape.getRotation();
+        float rotateAdjust = _azulRotate.speed * speedAdjust * lag;
+        _azulRotate.rotated += std::abs(rotateAdjust);
+        float nextRotation = currentRotation + rotateAdjust;
 
-        bool atTarget = false;
-
-        if (_azulRotate.source < _azulRotate.target) {
-            atTarget = currentRotation >= _azulRotate.target;
-        }
-        else {
-            atTarget = currentRotation <= _azulRotate.target;
-        }
-
-        if (atTarget) {
+        if (_azulRotate.rotated >= 90 ) {
             _azulShape.setRotation(_azulRotate.target);
             rotating = false;
         }
         else {
-            _azulShape.setRotation(currentRotation);
+            _azulShape.setRotation(nextRotation);
         }
 
         return rotating;

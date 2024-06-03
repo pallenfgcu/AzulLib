@@ -5,13 +5,20 @@
 #include "../include/Azul.h"
 #include "headers/AzulBoard.h"
 #include "headers/AzulUtility.h"
-#include "headers/AzulFileHandler.h"
 
 namespace fgcu {
 
+    const int INFINITY = -1;
+
     AzulBoard* getImplementation(void* impl) { return reinterpret_cast<AzulBoard*>(impl); }
 
-    Azul::Azul(std::string exercise) {
+    bool loadDemo(AzulBoard& board);
+    bool loadDefault(AzulBoard& board, int rows=8, int columns = 8);
+    bool loadStep(AzulBoard& board, int rows=8, int columns = 8);
+    bool loadSteeplechase(AzulBoard& board, int rows=8, int columns = 8);
+
+
+    Azul::Azul(AzulExercise exercise, int rows, int columns) {
 
         _board = new AzulBoard();
         
@@ -21,8 +28,7 @@ namespace fgcu {
         _caps = 0;
         _infiniteCaps = false;
 
-        if (!exercise.empty())
-            loadExercise(exercise);
+        loadExercise(exercise, rows, columns);
     } // constructor
 
     Azul::~Azul() {
@@ -31,24 +37,39 @@ namespace fgcu {
         // This will suppress the warning on delete of void*
         free(_board);
     }
-    
-    bool Azul::loadExercise(std::string exerciseFile) {
-        bool load = false;
+
+    bool Azul::loadExercise(AzulExercise exercise, int rows, int columns) {
+        bool loaded {false};
+
         AzulBoard* theBoard = getImplementation(_board);
-        
-        if (!theBoard->isClosing()) {
-            theBoard->erase();
-            load = AzulFileHandler::loadFile(exerciseFile, *theBoard);
-            if (load) {
-                _currentCell = theBoard->getStartCell();
-                _currentFacing = static_cast<AzulDirection>(theBoard->getStartFacing());
-                _caps = theBoard->getStartCaps();
-                _infiniteCaps = _caps == -1;
-                theBoard->startAzul();
-            }
+
+        _exercise = exercise;
+
+        switch (_exercise) {
+            case AzulExercise::Demo:
+                loaded = loadDemo(*theBoard);
+                break;
+            case AzulExercise::Step:
+                loaded = loadStep(*theBoard, rows, columns);
+                break;
+            case AzulExercise::Steeplechase:
+                loaded = loadSteeplechase(*theBoard, rows, columns);
+                break;
+            default:
+                _exercise = AzulExercise::Default;
+                loaded = loadDefault(*theBoard, rows, columns);
+        } // which exercise
+
+        if (loaded) {
+            _currentCell = theBoard->getStartCell();
+            _currentFacing = static_cast<AzulDirection>(theBoard->getStartFacing());
+            _caps = theBoard->getStartCaps();
+            _infiniteCaps = _caps == -1;
+            theBoard->startAzul();
         }
-        return load;
-    }
+
+        return loaded;
+    }   // loadExercise
 
     bool Azul::canMoveForward() {
         AzulBoard* theBoard = getImplementation(_board);
@@ -147,16 +168,11 @@ namespace fgcu {
         }
     }
 
-    void Azul::demo(std::string demoFile) {
+    void Azul::demo() {
         AzulBoard* theBoard = getImplementation(_board);
         if (!theBoard->isClosing()) {
-
-            if (demoFile.empty()) {
-                loadExercise("demo.dat");
-            }
-            else {
-                loadExercise(demoFile);
-            }
+            if (_exercise != AzulExercise::Demo)
+                loadExercise(AzulExercise::Demo);
 
             unsigned short demoCaps[7] = {0x0000, 0x7775, 0x4445, 0x7745, 0x4545, 0x4777, 0x0000};
 
@@ -190,6 +206,60 @@ namespace fgcu {
 
         }
     } // demo
+
+    bool loadDemo(AzulBoard& board) {
+        board.init(7, 15, "Demo");
+        board.setInitialized(true);
+        board.setStartCell(0, 0);
+        board.setStartFacing(AzulUtility::Cardinality::East);
+        board.setStartCaps(INFINITY);
+        return true;
+    } // loadDemo
+
+    bool loadDefault(AzulBoard& board, int rows, int columns) {
+        board.init(rows, columns, "Azul");
+        board.setInitialized(true);
+        board.setStartCell(0, 0);
+        board.setStartFacing(AzulUtility::Cardinality::East);
+        board.setStartCaps(0);
+        return true;
+    } // loadDemo
+
+    bool loadStep(AzulBoard& board, int rows, int columns) {
+        board.init(rows, columns, "Step");
+        board.setInitialized(true);
+        // setup Azul
+        board.setStartCell(rows-1, 0);
+        board.setStartFacing(AzulUtility::Cardinality::East);
+        board.setStartCaps(0);
+        // add walls
+        board.addCellWall(rows-1,2,AzulUtility::Cardinality::East);
+        for (int column=3; column < columns; ++column) {
+            board.addCellWall(rows-2,column,AzulUtility::Cardinality::South);
+        }
+        // add caps
+        board.addCellCaps(rows-2, columns-4, 1);
+        return true;
+    } // loadStep
+
+    bool loadSteeplechase(AzulBoard& board, int rows, int columns) {
+        board.init(rows, columns, "Steeplechase");
+        board.setInitialized(true);
+        // setup Azul
+        board.setStartCell(rows-1, 0);
+        board.setStartFacing(AzulUtility::Cardinality::East);
+        board.setStartCaps(0);
+        // add walls
+        AzulUtility::initRandom();
+        for (int column=0; column < columns-1; ++column) {
+            int height = AzulUtility::getRandomNumber(rows - 1);
+            for (int row=rows-1; row < height; --row) {
+                board.addCellWall(row,column,AzulUtility::Cardinality::East);
+            }
+        }
+        return true;
+    } // loadSteeplechase
+
 
 } // fgcu
 

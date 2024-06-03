@@ -70,6 +70,16 @@ int main() {
 \endverbatim
 */
     class Azul {
+    public:
+
+        /// Defined exercises that Azul can run
+        enum AzulExercise {
+            Default,
+            Demo,
+            Step,
+            Steeplechase
+        };
+
     private:
 
         enum AzulDirection {
@@ -80,6 +90,7 @@ int main() {
             West = 8
         };
 
+        AzulExercise _exercise;
 
         sf::Vector2i _currentCell;
         AzulDirection _currentFacing;
@@ -90,18 +101,19 @@ int main() {
         void* _board;
 
     public:
+
         /// Constructs a new instance of Azul
         /// \param exercise name of the data-file for the exercise to load
         /// \see loadExercise()
-        explicit Azul(std::string exercise={});
+        explicit Azul(AzulExercise exercise=AzulExercise::Default, int rows=8, int columns=8);
 
         ~Azul();
 
-        /// Loads a data file for an exercise that configures things like the
+        /// Loads a data for an exercise that configures things like the
         /// number of rows and columns in the grid, walls, caps, starting position, etc.
-        /// \param exerciseFile name of the data-file for the exercise to load
-        /// \return true if the exercise file was successfully loaded
-        bool loadExercise(std::string exerciseFile);
+        /// \param exercise enum of the exercise to load
+        /// \return true if the exercise was successfully loaded
+        bool loadExercise(AzulExercise exercise, int rows=8, int columns=8);
 
         /// Determine if Azul can move one cell forward from his current cell in the
         /// direction he is currently facing.
@@ -144,9 +156,7 @@ int main() {
         void putDownCap();
 
         /// Run a program that demonstrates Azul's ability to navigate his world and drop graduation caps.
-        /// Make sure the exercise file "demo.dat" has been placed in your projects cmake_build_debug folder.
-        /// \param demoFile - optional path/demo.dat to locate the file outside of the project directory
-        void demo(std::string demoFile={});
+        void demo();
     };
 
 

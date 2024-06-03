@@ -12,7 +12,6 @@ FetchContent_MakeAvailable(SFML)
 
 add_library(azul
         src/Azul.cpp
-        src/AzulFileHandler.cpp
         src/AzulBoard.cpp
         src/AzulCell.cpp
         src/AzulWindow.cpp
