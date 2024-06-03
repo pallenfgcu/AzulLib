@@ -253,7 +253,7 @@ namespace fgcu {
         AzulUtility::initRandom();
         for (int column=0; column < columns-1; ++column) {
             int height = AzulUtility::getRandomNumber(rows - 1);
-            for (int row=rows-1; row < height; --row) {
+            for (int row=rows-1; row > rows-height; --row) {
                 board.addCellWall(row,column,AzulUtility::Cardinality::East);
             }
         }
