@@ -39,6 +39,13 @@ namespace fgcu {
         sf::Vector2f windowSize{boardSize.x + 2 * azulSize, boardSize.y + 2 * azulSize};
 
         auto desktop = sf::VideoMode::getDesktopMode();
+#if defined(__APPLE__)
+#include <TargetConditionals.h>
+#if TARGET_OS_MAC == 1
+        desktop.width /= 2.f;
+        desktop.height /= 2.f;
+#endif
+#endif
         desktop.width -= 2 * azulSize;
         desktop.height -= 2 * azulSize;
 
