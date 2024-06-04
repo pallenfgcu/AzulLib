@@ -35,7 +35,7 @@ namespace fgcu {
     const int WallWidth = 2;
     const int DotRadius = 2;
     const unsigned int AzulSpriteSize = 120;
-    const int CapScale = 0.75f;
+    const float CapScale = 0.75f;
     const int CapTextSize = 16;
     const float AzulScale = 0.75f;
     const unsigned int AzulAnimationFrames = 5;

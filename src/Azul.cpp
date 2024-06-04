@@ -8,7 +8,7 @@
 
 namespace fgcu {
 
-    const int INFINITY = -1;
+    const int INFINITE_CAPS = -1;
 
     AzulBoard* getImplementation(void* impl) { return reinterpret_cast<AzulBoard*>(impl); }
 
@@ -212,7 +212,7 @@ namespace fgcu {
         board.setInitialized(true);
         board.setStartCell(0, 0);
         board.setStartFacing(AzulUtility::Cardinality::East);
-        board.setStartCaps(INFINITY);
+        board.setStartCaps(INFINITE_CAPS);
         return true;
     } // loadDemo
 
