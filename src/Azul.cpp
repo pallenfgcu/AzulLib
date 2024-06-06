@@ -71,6 +71,11 @@ namespace fgcu {
         return loaded;
     }   // loadExercise
 
+    bool Azul::isClosing() {
+        AzulBoard* theBoard = getImplementation(_board);
+        return theBoard->isClosing();
+    }
+
     bool Azul::canMoveForward() {
         AzulBoard* theBoard = getImplementation(_board);
         return theBoard->canMove(_currentCell, static_cast<AzulUtility::Cardinality>(_currentFacing));

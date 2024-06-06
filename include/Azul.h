@@ -115,6 +115,11 @@ int main() {
         /// \return true if the exercise was successfully loaded
         bool loadExercise(AzulExercise exercise, int rows=8, int columns=8);
 
+        /// Check the state of the Azul window.  If the user closes the window using the "X"
+        /// in the titlebar, then this function will return true.
+        /// \return true if the Azul window is closing
+        bool isClosing();
+
         /// Determine if Azul can move one cell forward from his current cell in the
         /// direction he is currently facing.
         /// \return false if a wall blocks his way or he is facing a border wall, true otherwise
