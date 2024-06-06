@@ -221,7 +221,7 @@ namespace fgcu {
         board.setInitialized(true);
         board.setStartCell(0, 0);
         board.setStartFacing(AzulUtility::Cardinality::East);
-        board.setStartCaps(0);
+        board.setStartCaps(INFINITE_CAPS);
         return true;
     } // loadDemo
 
