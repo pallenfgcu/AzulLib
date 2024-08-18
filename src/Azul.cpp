@@ -294,7 +294,7 @@ namespace fgcu {
 
         // get number of graduation caps to place
         AzulUtility::initRandom();
-        int maxCaps = (rows - 2) * 2 + 2; // max number of graduates
+        int maxCaps = (rows - 2) * 2; // max number of graduates
         int minCaps = maxCaps / 2;
         int totalCaps = AzulUtility::getRandomNumber(maxCaps, minCaps);
         // add graduation caps
