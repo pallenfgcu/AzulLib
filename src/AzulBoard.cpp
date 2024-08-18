@@ -75,6 +75,10 @@ namespace fgcu {
         }
     }
 
+    int AzulBoard::cellCapsCount(int row, int column) {
+        return cellCapsCount(sf::Vector2i{column, row});
+    }
+
     int AzulBoard::cellCapsCount(sf::Vector2i location) {
         if (_initialized) {
             return _cells[location.y][location.x].capCount();
