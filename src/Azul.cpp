@@ -281,7 +281,6 @@ namespace fgcu {
         board.setStartCaps(0);
 
         // add walls
-        AzulUtility::initRandom();
         for (int column = 1; column <= columns; ++column) {
             if (column % 3) { // add outer wall
                 board.addCellWall(1,column-1,AzulUtility::Cardinality::South);
@@ -294,12 +293,13 @@ namespace fgcu {
         }
 
         // get number of graduation caps to place
+        AzulUtility::initRandom();
         int maxCaps = (rows - 2) * 2 + 2; // max number of graduates
         int minCaps = maxCaps / 2;
         int totalCaps = AzulUtility::getRandomNumber(maxCaps, minCaps);
         // add graduation caps
         while (totalCaps) {
-            int capRow =  AzulUtility::getRandomNumber(2, rows-1);
+            int capRow =  AzulUtility::getRandomNumber(rows-1, 2);
             int capColumn = AzulUtility::getRandomNumber(7, 0);
             int caps = board.cellCapsCount(sf::Vector2i{capRow, capColumn});
             board.addCellCaps(sf::Vector2i{capRow, capColumn}, caps+1);
