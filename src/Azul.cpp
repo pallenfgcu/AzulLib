@@ -13,10 +13,10 @@ namespace fgcu {
     AzulBoard* getImplementation(void* impl) { return reinterpret_cast<AzulBoard*>(impl); }
 
     bool loadDemo(AzulBoard& board);
-    bool loadDefault(AzulBoard& board, int rows=8, int columns = 8);
-    bool loadStep(AzulBoard& board, int rows=8, int columns = 8);
-    bool loadSteeplechase(AzulBoard& board, int rows=8, int columns = 8);
-
+    bool loadDefault(AzulBoard& board, int rows=8, int columns=8);
+    bool loadStep(AzulBoard& board, int rows=8, int columns=8);
+    bool loadSteeplechase(AzulBoard& board, int rows=8, int columns=8);
+    bool loadGraduation(AzulBoard& board, int rows=8, int columns=8);
 
     Azul::Azul(AzulExercise exercise, int rows, int columns) {
 
@@ -54,6 +54,9 @@ namespace fgcu {
                 break;
             case AzulExercise::Steeplechase:
                 loaded = loadSteeplechase(*theBoard, rows, columns);
+                break;
+            case AzulExercise::Graduation:
+                loaded = loadGraduation(*theBoard, rows, columns);
                 break;
             default:
                 _exercise = AzulExercise::Default;
@@ -213,7 +216,7 @@ namespace fgcu {
     } // demo
 
     bool loadDemo(AzulBoard& board) {
-        board.init(7, 15, "Demo");
+        board.init(7, 15, "Azul Demo");
         board.setInitialized(true);
         board.setStartCell(0, 0);
         board.setStartFacing(AzulUtility::Cardinality::East);
@@ -231,7 +234,7 @@ namespace fgcu {
     } // loadDemo
 
     bool loadStep(AzulBoard& board, int rows, int columns) {
-        board.init(rows, columns, "Step");
+        board.init(rows, columns, "Azul Step");
         board.setInitialized(true);
         // setup Azul
         board.setStartCell(rows-1, 0);
@@ -248,7 +251,7 @@ namespace fgcu {
     } // loadStep
 
     bool loadSteeplechase(AzulBoard& board, int rows, int columns) {
-        board.init(rows, columns, "Steeplechase");
+        board.init(rows, columns, "Azul Steeplechase");
         board.setInitialized(true);
         // setup Azul
         board.setStartCell(rows-1, 0);
@@ -265,6 +268,45 @@ namespace fgcu {
         return true;
     } // loadSteeplechase
 
+    bool loadGraduation(AzulBoard& board, int rows, int columns) {
+        columns = 8; // override user entered columns
+        if (rows < 3)
+            rows = 3;
+        board.init(rows, columns, "Azul Graduation");
+        board.setInitialized(true);
+
+        // setup Azul
+        board.setStartCell(rows-1, 0);
+        board.setStartFacing(AzulUtility::Cardinality::East);
+        board.setStartCaps(0);
+
+        // add walls
+        AzulUtility::initRandom();
+        for (int column = 1; column <= columns; ++column) {
+            if (column % 3) { // add outer wall
+                board.addCellWall(1,column-1,AzulUtility::Cardinality::South);
+            }
+            else { // add door
+                board.addCellWall(0,column-1,AzulUtility::Cardinality::South);
+                board.addCellWall(1,column-1,AzulUtility::Cardinality::West);
+                board.addCellWall(1,column-1,AzulUtility::Cardinality::East);
+            }
+        }
+
+        // get number of graduation caps to place
+        int maxCaps = (rows - 2) * 2 + 2; // max number of graduates
+        int minCaps = maxCaps / 2;
+        int totalCaps = AzulUtility::getRandomNumber(maxCaps, minCaps);
+        // add graduation caps
+        while (totalCaps) {
+            int capRow =  AzulUtility::getRandomNumber(2, rows-1);
+            int capColumn = AzulUtility::getRandomNumber(7, 0);
+            int caps = board.addCellCap(sf::Vector2i{capRow, capColumn});
+            --totalCaps;
+        }
+
+        return true;
+    } // loadGraduation
 
 } // fgcu
 

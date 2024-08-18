@@ -77,7 +77,8 @@ int main() {
             Default,
             Demo,
             Step,
-            Steeplechase
+            Steeplechase,
+            Graduation
         };
 
     private:
