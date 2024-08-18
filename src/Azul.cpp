@@ -299,8 +299,8 @@ namespace fgcu {
         int totalCaps = AzulUtility::getRandomNumber(maxCaps, minCaps);
         // add graduation caps
         while (totalCaps) {
-            int capRow =  AzulUtility::getRandomNumber((rows-1), 2);
-            int capColumn = AzulUtility::getRandomNumber((columns-1), 0);
+            int capRow =  AzulUtility::getRandomNumber(rows-2, 2);
+            int capColumn = AzulUtility::getRandomNumber(columns);
             int caps = board.cellCapsCount(capRow, capColumn);
             board.addCellCaps(capRow, capColumn, caps+1);
             --totalCaps;
