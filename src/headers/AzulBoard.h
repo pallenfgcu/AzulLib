@@ -54,6 +54,7 @@ namespace fgcu {
         void addCellWall(sf::Vector2i location, AzulUtility::Cardinality wall);
         void addCellCaps(int row, int column, int caps);
         void addCellCaps(sf::Vector2i location, int caps);
+        int cellCapsCount(sf::Vector2i location);
 
         void erase();
 

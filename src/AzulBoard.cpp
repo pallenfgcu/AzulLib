@@ -75,6 +75,13 @@ namespace fgcu {
         }
     }
 
+    int AzulBoard::cellCapsCount(sf::Vector2i location) {
+        if (_initialized) {
+            return _cells[location.y][location.x].capCount();
+        }
+        return 0;
+    }
+
     void AzulBoard::erase() {
         _title = "Azul's World";
         _dimensions = sf::Vector2i(8, 8);

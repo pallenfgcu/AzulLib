@@ -301,7 +301,8 @@ namespace fgcu {
         while (totalCaps) {
             int capRow =  AzulUtility::getRandomNumber(2, rows-1);
             int capColumn = AzulUtility::getRandomNumber(7, 0);
-            int caps = board.addCellCap(sf::Vector2i{capRow, capColumn});
+            int caps = board.cellCapsCount(sf::Vector2i{capRow, capColumn});
+            board.addCellCaps(sf::Vector2i{capRow, capColumn}, caps+1);
             --totalCaps;
         }
 
