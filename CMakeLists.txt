@@ -1,74 +1,97 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.20)
 
 project(AzulLib
-        VERSION 1.0.0
+        VERSION 1.0.1
+        DESCRIPTION "Azul's World core library (SFML-based)"
         LANGUAGES CXX
 )
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
-
-# ---- Dependencies ----
-include(FetchContent)
-
-# Turn off SFML extras to speed up builds for students
-set(SFML_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(SFML_BUILD_DOC OFF CACHE BOOL "" FORCE)
-set(SFML_BUILD_TEST_SUITE OFF CACHE BOOL "" FORCE)
-
-FetchContent_Declare(SFML
-        GIT_REPOSITORY https://github.com/SFML/SFML.git
-        GIT_TAG 2.6.x
-)
-
-FetchContent_MakeAvailable(SFML)
-
-# ---- AzulLib library ----
-add_library(AzulLib
-        src/Azul.cpp
-        src/AzulBoard.cpp
-        src/AzulCell.cpp
-        src/AzulWindow.cpp
-        src/AzulDrawableCell.cpp
-        src/AzulUtility.cpp
-        src/Slider.cpp
-        src/RoundedRectangleShape.cpp
-        src/AnimatedButton.cpp
-)
-
-# Modern alias target for consumers
-add_library(Azul::AzulLib ALIAS AzulLib)
-
-target_compile_features(AzulLib PUBLIC cxx_std_17)
-
 include(GNUInstallDirs)
 
+# -----------------------------
+# Diagnostics
+# -----------------------------
+message(STATUS "AzulLib: CMake ${CMAKE_VERSION}")
+message(STATUS "AzulLib: Generator: ${CMAKE_GENERATOR}")
+message(STATUS "AzulLib: Build type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "AzulLib: Version: ${PROJECT_VERSION}")
+
+# -----------------------------
+# C++ settings
+# -----------------------------
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# -----------------------------
+# Library target
+# -----------------------------
+add_library(AzulLib)
+
+# Namespaced alias for consumers (recommended)
+add_library(Azul::AzulLib ALIAS AzulLib)
+
+# Source files
+file(GLOB_RECURSE AZULLIB_SOURCES CONFIGURE_DEPENDS
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cc"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cxx"
+)
+
+target_sources(AzulLib PRIVATE ${AZULLIB_SOURCES})
+
+# Public headers are under include/
 target_include_directories(AzulLib
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/headers
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-# If AzulLib headers expose SFML types, this should be PUBLIC (recommended)
-target_link_libraries(AzulLib PUBLIC
+target_compile_features(AzulLib PUBLIC cxx_std_17)
+
+# -----------------------------
+# SFML dependency
+# -----------------------------
+# Expect SFML targets to be provided by the parent project (Azul).
+# If someone builds AzulLib standalone, they can still use find_package(SFML ...)
+# or extend this to FetchContent SFML.
+set(_AZULLIB_HAVE_SFML_TARGETS OFF)
+if (TARGET sfml-graphics AND TARGET sfml-window AND TARGET sfml-system)
+    set(_AZULLIB_HAVE_SFML_TARGETS ON)
+endif()
+
+if (NOT _AZULLIB_HAVE_SFML_TARGETS)
+    message(FATAL_ERROR
+            "AzulLib: SFML targets not found (sfml-graphics/sfml-window/sfml-system).\n"
+            "This project is typically built as a dependency of the Azul executable project,\n"
+            "which fetches SFML via FetchContent.\n\n"
+            "If building AzulLib standalone, provide SFML targets before configuring AzulLib."
+    )
+endif()
+
+target_link_libraries(AzulLib
+        PUBLIC
         sfml-graphics
         sfml-window
         sfml-system
 )
 
-# ---- Runtime dependencies (Windows) ----
-if(WIN32)
-    add_custom_command(
-            TARGET AzulLib POST_BUILD
-            COMMENT "Copy OpenAL DLL for SFML"
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${SFML_SOURCE_DIR}/extlibs/bin/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,x64,x86>/openal32.dll"
-            "$<TARGET_FILE_DIR:AzulLib>"
-            VERBATIM
-    )
-endif()
+# -----------------------------
+# Install (optional, but clean)
+# -----------------------------
+install(TARGETS AzulLib
+        EXPORT AzulLibTargets
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
-# ---- Install (optional, but future-proof) ----
-install(TARGETS AzulLib)
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/"
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(EXPORT AzulLibTargets
+        NAMESPACE Azul::
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/AzulLib
+)

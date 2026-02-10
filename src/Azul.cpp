@@ -3,8 +3,8 @@
 //
 
 #include "../include/Azul.h"
-#include "headers/AzulBoard.h"
-#include "headers/AzulUtility.h"
+#include "../include/azul/AzulBoard.h"
+#include "../include/azul/AzulUtility.h"
 
 namespace fgcu {
 

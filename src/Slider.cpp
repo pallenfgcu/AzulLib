@@ -2,7 +2,7 @@
 // Created by pallen on 12/20/2023.
 //
 
-#include "headers/Slider.h"
+#include "../include/azul/Slider.h"
 
 namespace fgcu {
 

@@ -2,9 +2,9 @@
 // Created by pallen on 11/25/2023.
 //
 
-#include "headers/AzulDrawableCell.h"
-#include "headers/AzulWindow.h"
-#include "headers/AzulUtility.h"
+#include "../include/azul/AzulDrawableCell.h"
+#include "../include/azul/AzulWindow.h"
+#include "../include/azul/AzulUtility.h"
 
 namespace fgcu {
 

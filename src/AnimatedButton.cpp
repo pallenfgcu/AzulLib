@@ -4,8 +4,8 @@
 
 #include <cmath>
 
-#include "headers/AnimatedButton.h"
-#include "headers/AzulUtility.h"
+#include "../include/azul/AnimatedButton.h"
+#include "../include/azul/AzulUtility.h"
 
 namespace fgcu {
 
