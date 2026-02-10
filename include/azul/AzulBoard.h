@@ -2,9 +2,9 @@
 // Created by pallen on 11/22/2023.
 //
 #include <SFML/Graphics.hpp>
-#include "AzulCell.h"
-#include "AzulWindow.h"
-#include "AzulUtility.h"
+#include "azul/AzulCell.h"
+#include "azul/AzulWindow.h"
+#include "azul/AzulUtility.h"
 #include <string>
 #include <vector>
 

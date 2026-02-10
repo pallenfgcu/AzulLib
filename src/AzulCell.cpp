@@ -1,7 +1,7 @@
 //
 // Created by pallen on 11/23/2023.
 //
-#include "../include/azul/AzulCell.h"
+#include "azul/AzulCell.h"
 #include <string>
 
 namespace fgcu {

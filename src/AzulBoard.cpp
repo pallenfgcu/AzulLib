@@ -2,7 +2,7 @@
 // Created by pallen on 11/23/2023.
 //
 
-#include "../include/azul/AzulBoard.h"
+#include "azul/AzulBoard.h"
 
 namespace fgcu {
 

@@ -1,10 +1,10 @@
 //
 // Created by pallen on 11/25/2023.
 //
-#include "../include/azul/AzulWindow.h"
-#include "../include/azul/AzulUtility.h"
-#include "../include/azul/AzulSprites.h"
-#include "../include/azul/RobotoMonoFont.h"
+#include "azul/AzulWindow.h"
+#include "azul/AzulUtility.h"
+#include "azul/AzulSprites.h"
+#include "azul/RobotoMonoFont.h"
 #include <algorithm> // swap
 #include <cmath> // round, fmod
 

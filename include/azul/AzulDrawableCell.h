@@ -3,7 +3,7 @@
 //
 #include <SFML/Graphics.hpp>
 #include <string>
-#include "AzulUtility.h"
+#include "azul/AzulUtility.h"
 
 #ifndef AZUL_AZULDRAWABLECELL_H
 #define AZUL_AZULDRAWABLECELL_H

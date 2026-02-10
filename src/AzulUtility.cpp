@@ -1,7 +1,7 @@
 //
 // Created by pallen on 11/25/2023.
 //
-#include "../include/azul/AzulUtility.h"
+#include "azul/AzulUtility.h"
 #include <cmath>
 
 namespace fgcu {

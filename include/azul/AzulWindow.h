@@ -4,10 +4,10 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
-#include "../../include/azul/AzulCell.h"
-#include "../../include/azul/AzulUtility.h"
-#include "../../include/azul/AnimatedButton.h"
-#include "../../src/headers/Slider.h"
+#include "azul/AzulCell.h"
+#include "azul/AzulUtility.h"
+#include "azul/AnimatedButton.h"
+#include "azul/Slider.h"
 
 #ifndef AZUL_AZULWINDOW_H
 #define AZUL_AZULWINDOW_H

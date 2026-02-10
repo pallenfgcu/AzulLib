@@ -1,8 +1,8 @@
 //
 // Created by pallen on 11/22/2023.
 //
-#include "AzulDrawableCell.h"
-#include "AzulUtility.h"
+#include "azul/AzulDrawableCell.h"
+#include "azul/AzulUtility.h"
 
 #ifndef AZUL_AZULCELL_H
 #define AZUL_AZULCELL_H
