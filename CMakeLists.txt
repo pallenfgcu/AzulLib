@@ -26,7 +26,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # -----------------------------
 # Library target
 # -----------------------------
-add_library(AzulLib)
+add_library(AzulLib STATIC)
 
 # Namespaced alias for consumers (recommended)
 add_library(Azul::AzulLib ALIAS AzulLib)
