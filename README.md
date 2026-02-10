@@ -1,3 +1,5 @@
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+
 # AzulLib
 *Core Library for Azul’s World (C++ / SFML)*
 
