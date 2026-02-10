@@ -1,6 +1,20 @@
-build
-out
-.cache
-.idea
-.vs
-.vscode
+# Build directories (CMake / IDE generated)
+build/
+cmake-build-*/
+out/
+
+# CMake generated files (if configured in repo root)
+CMakeCache.txt
+CMakeFiles/
+
+# IDE / editor files
+.idea/
+.vs/
+.vscode/
+
+# Tooling caches
+.cache/
+
+# OS junk
+.DS_Store
+Thumbs.db
